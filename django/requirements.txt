@@ -1,0 +1,14 @@
+django
+coverage
+psycopg2-binary
+gunicorn
+djangorestframework
+django-cors-headers
+djangorestframework-recursive
+requests
+django-silk
+django-elasticsearch-dsl>=7.0.0
+django-eav2
+rdflib
+edtf
+tqdm

@@ -1,0 +1,25 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+  <head>
+
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block metadata %}
+    {% endblock %}
+
+    <title>{% block header_title %}{% endblock %}</title>
+  </head>
+
+  <body>
+    {% block body %}{% endblock %}
+  </body>
+
+  {% block js %}
+  {% endblock %}
+
+</html>

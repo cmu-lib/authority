@@ -1,0 +1,56 @@
+version: "3"
+services:
+  django:
+    build: django
+    restart: always
+    command: ${SERVE_COMMAND}
+    volumes:
+      - ./django:/vol/app:z
+      - ./data/bkp:/vol/data/bkp:z
+      - ./data/import:/vol/data/import:z
+      - static:/vol/static_files:z
+    expose:
+      - 8000
+    links:
+      - "postgres:postgres"
+    env_file: .env
+    depends_on:
+      - postgres
+      # - elasticsearch
+
+  postgres:
+    image: postgres:13.1
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data:z
+    expose:
+      - 5432
+    env_file: .env
+
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    # restart: always
+    volumes:
+      - ./data/es:/usr/share/elasticsearch/data
+    expose:
+      - 9200
+    env_file: .env
+
+  nginx:
+    image: nginx:1.18
+    restart: always
+    links:
+      - "django:django"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/.
+      - ./data/logs:/var/log/nginx
+      - static:/vol/static_files
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: .env
+    depends_on:
+      - django
+
+volumes:
+  static:

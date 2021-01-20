@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header_title %}{{ object.pref_label }}{% endblock %}
+
+{% block body %}
+<h2>{{ object.pref_label }}</h2>
+<p>Preferred name: {{ object.pref_label }}</p>
+<p>Birth date: {{ object.birth_early }}</p>
+<p>Death date: {{ object.deathDate }}</p>
+{% if object.alt_labels.exists %}
+<p>Alternate Names</p>
+<ul>
+  {% for name in object.alt_labels.all %}
+  <li>{{ name }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
