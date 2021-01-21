@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.views import View
 from django.shortcuts import render
 from rest_framework import status
@@ -47,6 +48,7 @@ class CurrentUserView(APIView):
 
 class ReconciliationEndpoint(APIView):
     permission_classes = [AllowAny]
+    max_returned_items = settings.RECONCILIATION_MAX_RETURN
 
     def get(self, request, format=None):
         payload = {
@@ -76,11 +78,20 @@ class ReconciliationEndpoint(APIView):
             # TODO Fill in actual method
             return False
 
+        def items_slice(serialized_query):
+            try:
+                if serialized_query["limit"] <= self.max_returned_items:
+                    return serialized_query["limit"]
+                else:
+                    return self.max_returned_items
+            except:
+                return self.max_returned_items
+
         query = serialized_query["query"]
         es_response = documents.PersonDocument.search().query(
             Q("nested", path="alt_labels", query=Q("fuzzy", alt_labels__label=query))
-            | Q("fuzzy", pref_label="query")
-        )
+            | Q("fuzzy", pref_label=query)
+        )[0 : self.max_returned_items]
         formatted_response = []
         for hit in es_response:
             result = {

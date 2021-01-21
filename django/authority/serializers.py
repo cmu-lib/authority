@@ -2,13 +2,16 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from authority import models
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "first_name", "last_name", "username", "email", "is_staff"]
 
+
 class AuthoritySerializer(serializers.ModelSerializer):
     model = models.Authority
+
 
 class QueriesSerializer(serializers.Serializer):
     queries = serializers.JSONField()
@@ -17,7 +20,7 @@ class QueriesSerializer(serializers.Serializer):
 class ReconciliationQuerySerializer(serializers.Serializer):
     TYPE_CHOICES = (("any", "any"), ("all", "all"), ("should", "should"))
 
-    query = serializers.CharField(max_length=1000, help_text="A string to search for.")
+    query = serializers.CharField(max_length=4000, help_text="A string to search for.")
     limit = serializers.IntegerField(
         min_value=1,
         required=False,

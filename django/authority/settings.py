@@ -100,6 +100,9 @@ ELASTICSEARCH_DSL = {
 ELASTICSEARCH_DSL_AUTOSYNC = os.environ["DJANGO_ES_SYNC"] == "True"
 ELASTICSEARCH_DSL_AUTO_REFRESH = os.environ["DJANGO_ES_SYNC"] == "True"
 
+# Maximum number of items to return from reconciliation
+RECONCILIATION_MAX_RETURN = 5
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

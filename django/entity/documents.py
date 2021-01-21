@@ -5,7 +5,7 @@ from entity import models
 
 @registry.register_document
 class PersonDocument(Document):
-    alt_labels = fields.NestedField(properties={"label": fields.KeywordField()})
+    alt_labels = fields.NestedField(properties={"label": fields.TextField()})
 
     class Index:
         name = "people"
