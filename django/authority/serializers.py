@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from authority import models
+import entity.models
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,3 +42,25 @@ class ReconciliationQuerySerializer(serializers.Serializer):
         required=False,
         help_text="Array of json object literals.",
     )
+
+
+class DataExtensionPropertySerializer(serializers.Serializer):
+    PROPERTY_CHOICES = (
+        ("pref_name", "pref_name"),
+        ("viaf_match", "viaf_match"),
+        ("lcnaf_match", "lcnaf_match"),
+    )
+
+    id = serializers.ChoiceField(choices=PROPERTY_CHOICES)
+    settings = serializers.JSONField(required=False)
+
+
+class DataExtensionQueriesSerializer(serializers.Serializer):
+    ids = serializers.PrimaryKeyRelatedField(
+        queryset=entity.models.Entity.objects.all(), many=True
+    )
+    properties = DataExtensionPropertySerializer(many=True)
+
+
+class DataExtensionWrapper(serializers.Serializer):
+    extend = DataExtensionQueriesSerializer(many=False)
