@@ -1,5 +1,6 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
+from elasticsearch_dsl import Q
 from entity import models
 
 
@@ -29,3 +30,16 @@ class PersonDocument(Document):
     def get_instances_from_related(self, related_instance):
         if isinstance(related_instance, models.Name):
             return related_instance.name_of
+
+    def reconciliation_search(self, query, max_items):
+        """
+        Define the search that works best for common reconciliation needs, weighting matches to a preferred label more than matches to alt_labels
+        """
+        return self.search().query(
+            Q("multi_match", query=query, fields=["pref_label^5"])
+            | Q(
+                "nested",
+                path="alt_labels",
+                query=Q("multi_match", query=query, fields=["alt_labels.label^1"]),
+            )
+        )[0:max_items]

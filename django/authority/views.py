@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from authority import serializers
 from entity import documents
-from elasticsearch_dsl import Q
 
 
 class GetSerializerClassMixin(object):
@@ -65,8 +64,33 @@ class ReconciliationEndpoint(APIView):
                 "width": 300,
                 "url": "http://localhost/reconcile/preview/{{id}}",
             },
+            "extend": {
+                "propose_properties": {
+                    "service_url": "http://localhost/",
+                    "serivce_path": reverse("reconcile-properties"),
+                },
+                "property_settings": [
+                    {
+                        "name": "limit",
+                        "label": "Limit",
+                        "type": "number",
+                        "default": 0,
+                        "help_text": "Maximum number of values to return per row (0 for no limit)",
+                    },
+                    {
+                        "name": "cmu_uri",
+                        "label": "CMU URI",
+                        "type": "select",
+                        "default": "literal",
+                        "help_text": "Content type: ID or literal",
+                        "choices": [
+                            {"value": "id", "name": "ID"},
+                            {"value": "literal", "name": "Literal"},
+                        ],
+                    },
+                ],
+            },
             # "suggest": {},
-            # "extend": {},
         }
         return Response(payload, status=status.HTTP_200_OK)
 
@@ -88,10 +112,9 @@ class ReconciliationEndpoint(APIView):
                 return self.max_returned_items
 
         query = serialized_query["query"]
-        es_response = documents.PersonDocument.search().query(
-            Q("nested", path="alt_labels", query=Q("fuzzy", alt_labels__label=query))
-            | Q("fuzzy", pref_label=query)
-        )[0 : self.max_returned_items]
+        es_response = documents.PersonDocument().reconciliation_search(
+            query=query, max_items=self.max_returned_items
+        )
         formatted_response = []
         for hit in es_response:
             result = {
@@ -126,3 +149,11 @@ class ReconciliationEndpoint(APIView):
             payload[idx] = {"result": res}
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class DataExtensionEndpoint(APIView):
+    permission_classes = [AllowAny]
+    max_returned_items = settings.RECONCILIATION_MAX_RETURN
+
+    def post(self, request, format=None):
+        pass
