@@ -4,6 +4,7 @@ from authority import mixins
 from rdflib import Graph, namespace
 from rdflib.term import URIRef
 from edtf import parse_edtf, struct_time_to_date
+from collections import namedtuple
 
 """
 Abstract models used across the rest of the application
@@ -30,12 +31,18 @@ class Name(mixins.labeledModel, mixins.trackedModel):
 class Person(Entity):
     pref_label = models.CharField(default="", blank=True, max_length=5000)
     birth_edtf = models.CharField(
-        default="", blank=True, max_length=1000, verbose_name="Birth date"
+        default="",
+        blank=True,
+        max_length=1000,
+        verbose_name="Birth date expressed in EDTF",
     )
     birth_early = models.DateField(null=True, blank=True)
     birth_late = models.DateField(null=True, blank=True)
     death_edtf = models.CharField(
-        default="", blank=True, max_length=1000, verbose_name="Birth date"
+        default="",
+        blank=True,
+        max_length=1000,
+        verbose_name="Death date expressed in EDTF",
     )
     death_early = models.DateField(null=True, blank=True)
     death_late = models.DateField(null=True, blank=True)
@@ -56,6 +63,25 @@ class Person(Entity):
 
     class Meta:
         verbose_name_plural = "people"
+
+    def process_edtf(self, d):
+        ProcessedEDTF = namedtuple("ProcessedEDTF", "string begin end")
+        edtf_date = parse_edtf(d)
+        start_date = struct_time_to_date(edtf_date.lower_strict())
+        end_date = struct_time_to_date(edtf_date.upper_strict())
+        return ProcessedEDTF(str(edtf_date), start_date, end_date)
+
+    def process_birth_edtf(self):
+        processed_birth = self.process_edtf(self.birth_edtf)
+        self.birth_early = processed_birth.begin
+        self.birth_late = processed_birth.end
+        self.save()
+
+    def process_death_edtf(self):
+        processed_death = self.process_edtf(self.death_edtf)
+        self.death_early = processed_death.begin
+        self.death_late = processed_death.end
+        self.save()
 
     def populate_from_lcnaf_graph(self, lcnaf_graph):
         """
@@ -141,12 +167,8 @@ class Person(Entity):
         birth_end = None
         for d in birth_literals:
             try:
-                edtf_birth_date = parse_edtf(d)
-                self.birth_edtf = str(edtf_birth_date)
-                birth_start = edtf_birth_date.lower_strict()
-                birth_end = edtf_birth_date.upper_strict()
-                self.birth_early = struct_time_to_date(birth_start)
-                self.birth_late = struct_time_to_date(birth_end)
+                self.birth_edtf = d
+                self.process_birth_edtf()
                 break
             except Exception as e:
                 print(e)
@@ -163,12 +185,8 @@ class Person(Entity):
         death_end = None
         for d in death_literals:
             try:
-                edtf_death_date = parse_edtf(d)
-                self.death_edtf = str(edtf_death_date)
-                death_start = edtf_death_date.lower_strict()
-                death_end = edtf_death_date.upper_strict()
-                self.death_early = struct_time_to_date(death_start)
-                self.death_late = struct_time_to_date(death_end)
+                self.death_edtf = d
+                self.process_death_edtf()
                 break
             except:
                 continue

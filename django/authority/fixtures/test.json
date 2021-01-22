@@ -34,7 +34,7 @@
   "pk": 4,
   "fields": {
     "created_on": "2021-01-20T22:37:32.104Z",
-    "last_updated": "2021-01-20T23:07:15.066Z",
+    "last_updated": "2021-01-22T01:24:55.312Z",
     "user_created": null,
     "user_last_modified": null
   }
@@ -687,7 +687,7 @@
     "birth_edtf": "1901",
     "birth_early": null,
     "birth_late": null,
-    "death_edtf": "November 1972",
+    "death_edtf": "1972-11",
     "death_early": null,
     "death_late": null,
     "viaf_match": null,
@@ -714,7 +714,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$UI4kXbJciKKR$AgViYPcykeCkANFEUfB9wqg60pMegomKh9NH9isaZps=",
-    "last_login": "2021-01-20T22:32:56.154Z",
+    "last_login": "2021-01-22T01:24:47.326Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
