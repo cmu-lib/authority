@@ -18,7 +18,7 @@ class EDTFTest(TestCase):
 
 class PersonVIAFImportTest(TestCase):
     def test_load_viaf(self):
-        simon = models.Person(viaf_match="https://viaf.org/viaf/29540765")
+        simon = models.Person(viaf_match="http://viaf.org/viaf/29540765")
         simon.save()
         self.assertEqual(simon.death_edtf, "")
         self.assertIsNone(simon.death_early)
