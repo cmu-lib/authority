@@ -17,8 +17,10 @@ class PersonDocument(Document):
         fields = [
             "id",
             "pref_label",
+            "birth_edtf",
             "birth_early",
             "birth_late",
+            "death_edtf",
             "death_early",
             "death_late",
         ]
