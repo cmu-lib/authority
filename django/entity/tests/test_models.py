@@ -35,3 +35,28 @@ class PersonVIAFImportTest(TestCase):
         self.assertIsNotNone(simon.birth_early)
         self.assertIsNotNone(simon.birth_late)
         self.assertGreater(simon.alt_labels.count(), 0)
+
+
+class PersonLCNAFImportTest(TestCase):
+    def test_load_viaf(self):
+        simon = models.Person(
+            lcnaf_match="http://id.loc.gov/authorities/names/n79021485"
+        )
+        simon.save()
+        self.assertEqual(simon.death_edtf, "")
+        self.assertIsNone(simon.death_early)
+        self.assertIsNone(simon.death_late)
+        self.assertEquals(simon.birth_edtf, "")
+        self.assertIsNone(simon.birth_early)
+        self.assertIsNone(simon.birth_late)
+        self.assertEqual(simon.alt_labels.count(), 0)
+        self.assertIsNone(simon.viaf_match)
+        simon.populate_from_lcnaf_uri()
+        self.assertNotEqual(simon.death_edtf, "")
+        self.assertIsNotNone(simon.death_early)
+        self.assertIsNotNone(simon.death_late)
+        self.assertNotEqual(simon.birth_edtf, "")
+        self.assertIsNotNone(simon.birth_early)
+        self.assertIsNotNone(simon.birth_late)
+        self.assertGreater(simon.alt_labels.count(), 0)
+        self.assertEqual(simon.viaf_match, "http://viaf.org/viaf/29540765")
