@@ -57,10 +57,9 @@ class ReconciliationQueryTest(TestCase):
 
     ENDPOINT = reverse("reconciliation_endpoint")
 
-    # populate elasticsearch index
-    management.call_command("search_index", "--rebuild", "-f")
-
     def test_bad(self):
+        # populate elasticsearch index
+        management.call_command("search_index", "--rebuild", "-f")
         query_payload = {
             "q0": {
                 "term": "andrew",
@@ -70,9 +69,12 @@ class ReconciliationQueryTest(TestCase):
         res = self.client.post(
             self.ENDPOINT, data={"queries": json.dumps(query_payload)}
         )
+        print(res.content)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post(self):
+        # populate elasticsearch index
+        management.call_command("search_index", "--rebuild", "-f")
         query_payload = {
             "q0": {
                 "query": "andrew",
@@ -96,6 +98,7 @@ class ReconciliationQueryTest(TestCase):
         res = self.client.post(
             self.ENDPOINT, data={"queries": json.dumps(query_payload)}
         )
+        print(res.content)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         for qid in query_payload.keys():
             self.assertIn(qid, res.data.keys())

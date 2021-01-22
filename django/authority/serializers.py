@@ -13,10 +13,6 @@ class AuthoritySerializer(serializers.ModelSerializer):
     model = models.Authority
 
 
-class QueriesSerializer(serializers.Serializer):
-    queries = serializers.JSONField()
-
-
 class ReconciliationQuerySerializer(serializers.Serializer):
     TYPE_CHOICES = (("any", "any"), ("all", "all"), ("should", "should"))
 
@@ -41,3 +37,7 @@ class ReconciliationQuerySerializer(serializers.Serializer):
         required=False,
         help_text="Array of json object literals.",
     )
+
+
+class QueriesSerializer(serializers.Serializer):
+    queries = serializers.DictField(child=ReconciliationQuerySerializer())

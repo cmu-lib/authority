@@ -106,23 +106,25 @@ class ReconciliationEndpoint(APIView):
         return formatted_response
 
     def post(self, request, format=None):
-
+        print(request.data)
         queries_serializer = serializers.QueriesSerializer(data=request.data)
 
         if not queries_serializer.is_valid():
+            print(queries_serializer.errors)
             return Response(
                 queries_serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
         query_data = queries_serializer.validated_data["queries"]
+        print(query_data)
         payload = {}
         for idx, val in query_data.items():
-            serializer = serializers.ReconciliationQuerySerializer(data=val)
-            if not serializer.is_valid():
-                return Response(
-                    {idx: serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-                )
-            res = self.query_es(serialized_query=serializer.validated_data)
+            # serializer = serializers.ReconciliationQuerySerializer(data=val)
+            # if not serializer.is_valid():
+            #     return Response(
+            #         {idx: serializer.errors}, status=status.HTTP_400_BAD_REQUEST
+            #     )
+            res = self.query_es(serialized_query=val)
             payload[idx] = {"result": res}
 
         return Response(payload, status=status.HTTP_200_OK)
