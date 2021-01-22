@@ -16,7 +16,7 @@ services:
     env_file: .env
     depends_on:
       - postgres
-      # - elasticsearch
+      - elasticsearch
 
   postgres:
     image: postgres:13.1
@@ -29,7 +29,7 @@ services:
 
   elasticsearch:
     image: elasticsearch:7.10.1
-    # restart: always
+    restart: always
     volumes:
       - ./data/es:/usr/share/elasticsearch/data
     expose:
