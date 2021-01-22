@@ -57,10 +57,9 @@ class ReconciliationQueryTest(TestCase):
 
     ENDPOINT = reverse("reconciliation_endpoint")
 
-    # populate elasticsearch index
-    management.call_command("search_index", "--rebuild", "-f")
-
     def test_bad(self):
+        # populate elasticsearch index
+        management.call_command("search_index", "--rebuild", "-f")
         query_payload = {
             "q0": {
                 "term": "andrew",
