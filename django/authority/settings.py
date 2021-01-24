@@ -91,6 +91,8 @@ REST_FRAMEWORK = {
     "HTML_SELECT_CUTOFF": 10,
 }
 
+APPEND_SLASH = False
+
 ELASTICSEARCH_DSL = {
     "default": {
         "hosts": "elasticsearch:9200",

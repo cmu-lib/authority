@@ -1,13 +1,16 @@
 from django.conf import settings
 from django.views import View
 from django.shortcuts import render
+from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from authority import serializers
-from entity import documents
+from entity import documents, models
+import entity.serializers
+import json
 
 
 class GetSerializerClassMixin(object):
@@ -57,7 +60,7 @@ class ReconciliationEndpoint(APIView):
             "schemaSpace": "http://localhost/",
             "view": {"url": "http://localhost/person/{{id}}"},
             "defaultTypes": [
-                {"id": "/people", "name": "People"},
+                {"id": "person", "name": "People"},
             ],
             "preview": {
                 "height": 200,
@@ -66,8 +69,8 @@ class ReconciliationEndpoint(APIView):
             },
             "extend": {
                 "propose_properties": {
-                    "service_url": "http://localhost/",
-                    "serivce_path": reverse("reconcile-properties"),
+                    "service_url": "http://localhost",
+                    "service_path": reverse("reconcile-extend"),
                 },
                 "property_settings": [
                     {
@@ -77,20 +80,9 @@ class ReconciliationEndpoint(APIView):
                         "default": 0,
                         "help_text": "Maximum number of values to return per row (0 for no limit)",
                     },
-                    {
-                        "name": "cmu_uri",
-                        "label": "CMU URI",
-                        "type": "select",
-                        "default": "literal",
-                        "help_text": "Content type: ID or literal",
-                        "choices": [
-                            {"value": "id", "name": "ID"},
-                            {"value": "literal", "name": "Literal"},
-                        ],
-                    },
                 ],
             },
-            # "suggest": {},
+            "suggest": {},
         }
         return Response(payload, status=status.HTTP_200_OK)
 
@@ -120,7 +112,7 @@ class ReconciliationEndpoint(APIView):
             result = {
                 "id": hit.id,
                 "name": hit.pref_label,
-                "type": [{"id": "/people", "name": "Person"}],
+                "type": [{"id": "person", "name": "Person"}],
                 "score": hit.meta.score,
                 "match": is_match(serialized_query, hit),
             }
@@ -128,8 +120,7 @@ class ReconciliationEndpoint(APIView):
 
         return formatted_response
 
-    def post(self, request, format=None):
-
+    def post_reconcile(self, request):
         queries_serializer = serializers.QueriesSerializer(data=request.data)
 
         if not queries_serializer.is_valid():
@@ -150,10 +141,108 @@ class ReconciliationEndpoint(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+    def post_extend(self, request):
+        extension_request = serializers.DataExtensionWrapper(data=request.data)
+        if not extension_request.is_valid():
+            return Response(
+                [
+                    {
+                        "extend": "Requests must be made with application/x-www-form-urlencoded bodies containing a data extension query in a form element named 'extend'",
+                    },
+                    extension_request.errors,
+                ],
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        extension_serializer = serializers.DataExtensionQueriesSerializer(
+            data=extension_request.validated_data["extend"]
+        )
+        if not extension_serializer.is_valid():
+            return Response(
+                extension_serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Construct meta
+        extension_data = extension_serializer.validated_data
+        requested_field_names = [
+            i["id"] for i in extension_serializer.validated_data["properties"]
+        ]
+        meta_payload = [
+            {"id": i, "name": s}
+            for i, s in serializers.PERSON_PROPERTY_CHOICES
+            if i in requested_field_names
+        ]
+
+        rows_payload = {}
+        for e in extension_data["ids"]:
+            serialized_e = serializers.DynamicPersonSerializer(
+                e, fields=requested_field_names
+            ).data
+            entity_payload = {}
+            for k, v in serialized_e.items():
+                if isinstance(v, list):
+                    entity_payload[k] = [{"str": val} for val in v]
+                else:
+                    entity_payload[k] = [{"str": v}]
+                rows_payload[e.id] = entity_payload
+
+        complete_payload = {"meta": meta_payload, "rows": rows_payload}
+
+        return Response(complete_payload, status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+
+        if "queries" in request.data:
+            return self.post_reconcile(request)
+        elif "extend" in request.data:
+            return self.post_extend(request)
+        else:
+            return Response(
+                {
+                    "error": "POST request must either include the field 'queries' or 'extend'"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 
 class DataExtensionEndpoint(APIView):
     permission_classes = [AllowAny]
-    max_returned_items = settings.RECONCILIATION_MAX_RETURN
 
-    def post(self, request, format=None):
-        pass
+    def get(self, request, format=None):
+        entity_type = request.query_params.get("type", None)
+        property_limit = request.query_params.get("limit", None)
+
+        if entity_type == "person":
+            serialized_properties = []
+            for i, n in serializers.PERSON_PROPERTY_CHOICES:
+                property_serializer = (
+                    serializers.DataExtensionPropertyIndividualSerializer(
+                        data={"id": i, "name": n}
+                    )
+                )
+                property_serializer.is_valid()
+                serialized_properties.append(property_serializer.validated_data)
+            proposal_payload = {"type": "person"}
+            if property_limit is not None:
+                try:
+                    proposal_payload["limit"] = int(property_limit)
+                except:
+                    pass
+
+            proposal_payload["properties"] = serialized_properties
+            proposal_serializer = serializers.DataExtensionPropertyProposalSerializer(
+                data=proposal_payload
+            )
+            if not proposal_serializer.is_valid():
+                return Response(
+                    proposal_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                )
+            return Response(
+                proposal_serializer.validated_data,
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {"type": f"Type '{entity_type}' is not valid"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

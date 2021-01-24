@@ -15,6 +15,11 @@ urlpatterns = [
         name="reconciliation_endpoint",
     ),
     path(
+        "reconcile/extend",
+        authority.views.DataExtensionEndpoint.as_view(),
+        name="reconcile-extend",
+    ),
+    path(
         "reconcile/preview/<int:pk>",
         entity.views.PreviewView.as_view(),
         name="preview",
