@@ -14,6 +14,12 @@ class PreviewView(DetailView):
     context_object_name = "object"
 
 
+class FlyoutView(DetailView):
+    model = models.Person
+    template_name = "people_preview.html"
+    context_object_name = "object"
+
+
 class PersonView(viewsets.ModelViewSet):
     model = models.Person
     serializer_class = serializers.PersonSerializer

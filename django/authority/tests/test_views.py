@@ -140,3 +140,14 @@ class DataExtensionTest(TestCase):
     def test_get(self):
         res = self.client.get(self.ENDPOINT, data={"type": "person"})
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+class SuggestTest(TestCase):
+    fixtures = ["test.json"]
+
+    ENDPOINT = reverse("reconcile-suggest")
+
+    def test_get(self):
+        res = self.client.get(self.ENDPOINT, data={"prefix": "pre"})
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data["result"][0]["id"], "pref_label")

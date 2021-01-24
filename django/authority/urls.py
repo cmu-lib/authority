@@ -20,6 +20,16 @@ urlpatterns = [
         name="reconcile-extend",
     ),
     path(
+        "reconcile/suggest",
+        authority.views.SuggestEndpoint.as_view(),
+        name="reconcile-suggest",
+    ),
+    path(
+        "reconcile/suggest/flyout/<int:pk>",
+        entity.views.FlyoutView.as_view(),
+        name="flyout",
+    ),
+    path(
         "reconcile/preview/<int:pk>",
         entity.views.PreviewView.as_view(),
         name="preview",

@@ -82,7 +82,13 @@ class ReconciliationEndpoint(APIView):
                     },
                 ],
             },
-            "suggest": {},
+            "suggest": {
+                "property": {
+                    "service_url": "http://localhost",
+                    "service_path": reverse("reconcile-suggest"),
+                    # "flyout_service_path": f"{reverse('flyout')}/${{id}}",
+                }
+            },
         }
         return Response(payload, status=status.HTTP_200_OK)
 
@@ -246,3 +252,39 @@ class DataExtensionEndpoint(APIView):
                 {"type": f"Type '{entity_type}' is not valid"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class SuggestEndpoint(APIView):
+    permission_class = [AllowAny]
+
+    PERSON_FIELDS = [
+        {"id": f.name, "name": f.verbose_name, "description": f.help_text}
+        for f in entity.models.Person._meta.fields
+    ]
+
+    def get(self, request, format=None):
+        query_prefix = request.query_params.get("prefix", None)
+        query_cursor = request.query_params.get("cursor", None)
+        if query_prefix is None:
+            return Response(
+                {
+                    "prefix": "Suggest service query must contain the URL query parameter 'prefix'"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        suggest_serializer = serializers.SuggestQuerySerializer(
+            data={"prefix": query_prefix, "cursor": query_cursor}
+        )
+        if not suggest_serializer.is_valid():
+            return Response(
+                suggest_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+        suggest_response = {
+            "result": [
+                f
+                for f in self.PERSON_FIELDS
+                if suggest_serializer.validated_data["prefix"] in f["id"]
+            ]
+        }
+
+        return Response(suggest_response, status=status.HTTP_200_OK)

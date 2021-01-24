@@ -44,6 +44,9 @@ class ReconciliationQuerySerializer(serializers.Serializer):
     )
 
 
+# Data Extension Serializers
+
+
 class DataExtensionSettings(serializers.Serializer):
     CONTENT_CHOICES = (("id", "id"), ("label", "label"))
     limit = serializers.IntegerField(
@@ -132,3 +135,19 @@ class DynamicPersonSerializer(DynamicFieldsModelSerializer):
             "death_early",
             "death_late",
         ]
+
+
+# Suggest Serializers
+
+
+class SuggestQuerySerializer(serializers.Serializer):
+    prefix = serializers.CharField(
+        max_length=100,
+        help_text="The string input by the user in the auto-suggest-enabled field.",
+    )
+    cursor = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=0,
+        help_text="An optional integer to specify the number of suggestions to skip: this can be used by clients to fetch more suggestions.",
+    )
