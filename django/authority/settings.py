@@ -50,6 +50,8 @@ CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_NAME = "xsrfcookie"
 
+APPEND_SLASH = False
+
 # OpenRefine gets angry at this header
 SECURE_CONTENT_TYPE_NOSNIFF = False
 

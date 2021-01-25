@@ -62,14 +62,14 @@ class ReconciliationEndpoint(APIView):
             "name": "CMU Authority Reconciliation Service",
             "identifierSpace": "http://localhost/",
             "schemaSpace": "http://localhost/",
-            "view": {"url": "http://localhost/person/{{id}}"},
+            "view": {"url": "http://localhost/person/{{id}}/"},
             "defaultTypes": [
                 {"id": "person", "name": "People"},
             ],
             "preview": {
                 "height": 200,
                 "width": 300,
-                "url": "http://localhost/reconcile/preview/{{id}}",
+                "url": "http://localhost/reconcile/preview/{{id}}/",
             },
             "extend": {
                 "propose_properties": {
