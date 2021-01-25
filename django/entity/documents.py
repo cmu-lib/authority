@@ -38,10 +38,10 @@ class PersonDocument(Document):
         Define the search that works best for common reconciliation needs, weighting matches to a preferred label more than matches to alt_labels
         """
         return self.search().query(
-            Q("multi_match", query=query, fields=["pref_label^5"])
+            Q("multi_match", query=query, fields=["pref_label^5"], fuzziness="AUTO")
             | Q(
                 "nested",
                 path="alt_labels",
-                query=Q("multi_match", query=query, fields=["alt_labels.label^1"]),
+                query=Q("multi_match", query=query, fields=["alt_labels.label^1"], fuzziness="AUTO"),
             )
         )[0:max_items]
