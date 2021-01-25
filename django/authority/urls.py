@@ -9,6 +9,8 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path("", authority.views.HomeView.as_view(), name="home"),
     path("api/", include(router.urls)),
+    path("person/<int:pk>/populate_viaf/", entity.views.PopulateVIAF.as_view(), name="person-populate-viaf"),
+    path("person/<int:pk>/populate_lcnaf/", entity.views.PopulateLCNAF.as_view(), name="person-populate-lcnaf"),
     path(
         "reconcile/",
         authority.views.ReconciliationEndpoint.as_view(),

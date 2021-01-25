@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+{% block submit_buttons_bottom %}
+{{ block.super }}
+{% if original %} {# Only show if changing #}
+<div class="submit-row">
+  <a href="{% url 'person-populate-viaf' original.pk %}">
+    Populate from VIAF data
+  </a>|
+  <a href="{% url 'person-populate-lcnaf' original.pk %}">
+    Populate from LCNAF data
+  </a>
+</div>
+{% endif %}
+{% endblock %}
