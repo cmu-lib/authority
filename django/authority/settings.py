@@ -9,8 +9,6 @@ SECRET_KEY = os.environ["SECRET"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["DEBUG_STATUS"] == "True"
 
-ALLOWED_HOSTS = ["*"]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,11 +42,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "authority.urls"
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ["http://localhost"]
-CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
+X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost'
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_NAME = "xsrfcookie"
+
 
 APPEND_SLASH = False
 
