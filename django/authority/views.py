@@ -7,6 +7,9 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import renderer_classes
+from rest_framework.renderers import JSONRenderer
+from rest_framework_jsonp.renderers import JSONPRenderer
 from authority import serializers
 from entity import documents, models
 import entity.serializers
@@ -51,10 +54,11 @@ class CurrentUserView(APIView):
 class ReconciliationEndpoint(APIView):
     permission_classes = [AllowAny]
     max_returned_items = settings.RECONCILIATION_MAX_RETURN
+    renderer_classes = [JSONRenderer]
 
     def get(self, request, format=None):
         payload = {
-            "versions": ["0.2"],
+            "versions": ["0.1", "0.2"],
             "name": "CMU Authority Reconciliation Service",
             "identifierSpace": "http://localhost/",
             "schemaSpace": "http://localhost/",
@@ -72,21 +76,12 @@ class ReconciliationEndpoint(APIView):
                     "service_url": "http://localhost",
                     "service_path": reverse("reconcile-extend"),
                 },
-                "property_settings": [
-                    {
-                        "name": "limit",
-                        "label": "Limit",
-                        "type": "number",
-                        "default": 0,
-                        "help_text": "Maximum number of values to return per row (0 for no limit)",
-                    },
-                ],
+                "property_settings": [],
             },
             "suggest": {
                 "property": {
                     "service_url": "http://localhost",
                     "service_path": reverse("reconcile-suggest"),
-                    # "flyout_service_path": f"{reverse('flyout')}/${{id}}",
                 }
             },
         }
@@ -181,16 +176,16 @@ class ReconciliationEndpoint(APIView):
 
         rows_payload = {}
         for e in extension_data["ids"]:
-            serialized_e = serializers.DynamicPersonSerializer(
-                e, fields=requested_field_names
-            ).data
+            person = e.person
+            serialized_e = entity.serializers.PersonSerializer(person)
             entity_payload = {}
-            for k, v in serialized_e.items():
-                if isinstance(v, list):
-                    entity_payload[k] = [{"str": val} for val in v]
-                else:
-                    entity_payload[k] = [{"str": v}]
-                rows_payload[e.id] = entity_payload
+            for k, v in serialized_e.data.items():
+                if k in requested_field_names:
+                    if isinstance(v, list):
+                        entity_payload[k] = [{"str": val} for val in v]
+                    else:
+                        entity_payload[k] = [{"str": v}]
+                    rows_payload[e.id] = entity_payload
 
         complete_payload = {"meta": meta_payload, "rows": rows_payload}
 
@@ -236,6 +231,7 @@ class DataExtensionEndpoint(APIView):
                     pass
 
             proposal_payload["properties"] = serialized_properties
+            proposal_payload["type"] = "person"
             proposal_serializer = serializers.DataExtensionPropertyProposalSerializer(
                 data=proposal_payload
             )

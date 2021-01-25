@@ -119,7 +119,7 @@ class ReconciliationQueryTest(TestCase):
 
     def test_post_extend(self):
         query_payload = {
-            "ids": [1, 2, 3],
+            "ids": [5, 3],
             "properties": [
                 {"id": "pref_label"},
                 {"id": "birth_early"},
@@ -129,6 +129,7 @@ class ReconciliationQueryTest(TestCase):
         res = self.client.post(
             self.ENDPOINT, data={"extend": json.dumps(query_payload)}
         )
+        print(res.content)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 

@@ -3,6 +3,7 @@ coverage
 psycopg2-binary
 gunicorn
 djangorestframework
+djangorestframework-jsonp
 django-cors-headers
 django-silk
 django-elasticsearch-dsl>=7.0.0

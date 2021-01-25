@@ -15,22 +15,22 @@ urlpatterns = [
         name="reconciliation_endpoint",
     ),
     path(
-        "reconcile/extend",
+        "reconcile/extend/",
         authority.views.DataExtensionEndpoint.as_view(),
         name="reconcile-extend",
     ),
     path(
-        "reconcile/suggest",
+        "reconcile/suggest/",
         authority.views.SuggestEndpoint.as_view(),
         name="reconcile-suggest",
     ),
     path(
-        "reconcile/suggest/flyout/<int:pk>",
+        "reconcile/suggest/flyout/<int:pk>/",
         entity.views.FlyoutView.as_view(),
         name="flyout",
     ),
     path(
-        "reconcile/preview/<int:pk>",
+        "reconcile/preview/<int:pk>/",
         entity.views.PreviewView.as_view(),
         name="preview",
     ),

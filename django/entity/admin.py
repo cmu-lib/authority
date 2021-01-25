@@ -35,6 +35,7 @@ class PersonAdmin(admin.ModelAdmin):
         "death_early",
         "death_late",
         "viaf_match",
+        "lcnaf_match",
     ]
     inlines = [NameInline, CloseMatchInline]
 
