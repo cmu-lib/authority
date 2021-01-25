@@ -29,7 +29,7 @@ class Name(mixins.labeledModel, mixins.trackedModel):
 
 
 class Person(Entity):
-    pref_label = models.CharField(default="", blank=True, max_length=5000)
+    pref_label = models.CharField(default="", blank=True, db_index=True, max_length=5000)
     birth_edtf = models.CharField(
         default="",
         blank=True,
@@ -171,7 +171,6 @@ class Person(Entity):
                 self.process_birth_edtf()
                 break
             except Exception as e:
-                print(e)
                 continue
 
         # Get deathdates
