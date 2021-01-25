@@ -28,6 +28,7 @@ class CloseMatchInline(admin.TabularInline):
 
 class PersonAdmin(admin.ModelAdmin):
     model = entity.models.Person
+    search_fields = ["pref_label"]
     list_display = [
         "pref_label",
         "birth_early",
