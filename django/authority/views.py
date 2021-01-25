@@ -57,30 +57,31 @@ class ReconciliationEndpoint(APIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, request, format=None):
+        base_url = f"{request.scheme}://{request.get_host()}"
         payload = {
             "versions": ["0.1", "0.2"],
             "name": "CMU Authority Reconciliation Service",
-            "identifierSpace": "http://localhost/",
-            "schemaSpace": "http://localhost/",
-            "view": {"url": "http://localhost/person/{{id}}/"},
+            "identifierSpace": base_url,
+            "schemaSpace": base_url,
+            "view": {"url": f"{base_url}/reconcile/preview/{{{{id}}}}/"},
             "defaultTypes": [
                 {"id": "person", "name": "People"},
             ],
             "preview": {
                 "height": 200,
                 "width": 300,
-                "url": "http://localhost/reconcile/preview/{{id}}/",
+                "url": f"{base_url}/reconcile/preview/{{{{id}}}}/",
             },
             "extend": {
                 "propose_properties": {
-                    "service_url": "http://localhost",
+                    "service_url": base_url,
                     "service_path": reverse("reconcile-extend"),
                 },
                 "property_settings": [],
             },
             "suggest": {
                 "property": {
-                    "service_url": "http://localhost",
+                    "service_url": base_url,
                     "service_path": reverse("reconcile-suggest"),
                 }
             },
