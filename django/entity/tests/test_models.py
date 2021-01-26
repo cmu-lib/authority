@@ -1,5 +1,7 @@
 from django.test import TestCase
 from entity import models
+import authority.models
+from authority import namespaces
 
 
 class EDTFTest(TestCase):
@@ -18,8 +20,15 @@ class EDTFTest(TestCase):
 
 class PersonVIAFImportTest(TestCase):
     def test_load_viaf(self):
-        simon = models.Person(viaf_match="http://viaf.org/viaf/29540765")
-        simon.save()
+        simon = models.Person.objects.create()
+        viaf = authority.models.Authority.objects.create(
+            label="lcnaf", namespace=namespaces.VIAF
+        )
+        authority.models.CloseMatch.objects.create(
+            entity=simon,
+            authority=viaf,
+            identifier=f"{namespaces.VIAF}29540765",
+        )
         self.assertEqual(simon.death_edtf, "")
         self.assertIsNone(simon.death_early)
         self.assertIsNone(simon.death_late)
@@ -39,10 +48,19 @@ class PersonVIAFImportTest(TestCase):
 
 class PersonLCNAFImportTest(TestCase):
     def test_load_viaf(self):
-        simon = models.Person(
-            lcnaf_match="http://id.loc.gov/authorities/names/n79021485"
+        simon = models.Person.objects.create()
+        viaf = authority.models.Authority.objects.create(
+            label="viaf", namespace=namespaces.VIAF
         )
-        simon.save()
+        lcnaf = authority.models.Authority.objects.create(
+            label="lcnaf", namespace=namespaces.LOC
+        )
+        authority.models.CloseMatch.objects.create(
+            entity=simon,
+            authority=lcnaf,
+            identifier=f"{namespaces.LOC}n79021485",
+        )
+        self.assertEqual(simon.lcnaf_match, f"{namespaces.LOC}n79021485")
         self.assertEqual(simon.death_edtf, "")
         self.assertIsNone(simon.death_early)
         self.assertIsNone(simon.death_late)
@@ -51,7 +69,7 @@ class PersonLCNAFImportTest(TestCase):
         self.assertIsNone(simon.birth_late)
         self.assertEqual(simon.alt_labels.count(), 0)
         self.assertIsNone(simon.viaf_match)
-        simon.populate_from_lcnaf_uri()
+        simon.populate_from_lcnaf_uri(update_viaf=True)
         self.assertNotEqual(simon.death_edtf, "")
         self.assertIsNotNone(simon.death_early)
         self.assertIsNotNone(simon.death_late)
@@ -59,4 +77,4 @@ class PersonLCNAFImportTest(TestCase):
         self.assertIsNotNone(simon.birth_early)
         self.assertIsNotNone(simon.birth_late)
         self.assertGreater(simon.alt_labels.count(), 0)
-        self.assertEqual(simon.viaf_match, "http://viaf.org/viaf/29540765")
+        self.assertEqual(simon.viaf_match, f"{namespaces.VIAF}29540765")

@@ -1,636 +1,100 @@
 [
 {
+  "model": "authority.authority",
+  "pk": 1,
+  "fields": {
+    "label": "LC Name Authority File (LCNAF)",
+    "description": "",
+    "created_on": "2021-01-25T21:26:01.811Z",
+    "last_updated": "2021-01-25T21:26:01.812Z",
+    "user_created": null,
+    "user_last_modified": null,
+    "namespace": "http://id.loc.gov/authorities/names/"
+  }
+},
+{
+  "model": "authority.authority",
+  "pk": 2,
+  "fields": {
+    "label": "Virtual Internet Authority File (VIAF)",
+    "description": "",
+    "created_on": "2021-01-25T21:26:11.015Z",
+    "last_updated": "2021-01-25T21:26:11.015Z",
+    "user_created": null,
+    "user_last_modified": null,
+    "namespace": "http://viaf.org/viaf/"
+  }
+},
+{
+  "model": "authority.closematch",
+  "pk": 1,
+  "fields": {
+    "created_on": "2021-01-25T21:29:03.864Z",
+    "last_updated": "2021-01-25T21:29:03.864Z",
+    "user_created": null,
+    "user_last_modified": null,
+    "entity": 1,
+    "authority": 1,
+    "identifier": "http://id.loc.gov/authorities/names/n50032468"
+  }
+},
+{
+  "model": "authority.closematch",
+  "pk": 2,
+  "fields": {
+    "created_on": "2021-01-25T21:29:22.121Z",
+    "last_updated": "2021-01-25T21:29:22.121Z",
+    "user_created": null,
+    "user_last_modified": null,
+    "entity": 2,
+    "authority": 2,
+    "identifier": "http://viaf.org/viaf/62360327"
+  }
+},
+{
   "model": "entity.entity",
   "pk": 1,
   "fields": {
-    "created_on": "2021-01-20T22:33:34.118Z",
-    "last_updated": "2021-01-20T22:33:34.118Z",
+    "created_on": "2021-01-25T21:29:03.840Z",
+    "last_updated": "2021-01-25T21:29:07.215Z",
     "user_created": null,
-    "user_last_modified": null
+    "user_last_modified": null,
+    "pref_label": "Andrew Carnegie"
   }
 },
 {
   "model": "entity.entity",
   "pk": 2,
   "fields": {
-    "created_on": "2021-01-20T22:35:08.358Z",
-    "last_updated": "2021-01-20T22:35:08.358Z",
+    "created_on": "2021-01-25T21:29:22.116Z",
+    "last_updated": "2021-01-25T21:29:22.116Z",
     "user_created": null,
-    "user_last_modified": null
+    "user_last_modified": null,
+    "pref_label": "Andrew Mellon"
   }
 },
 {
   "model": "entity.entity",
   "pk": 3,
   "fields": {
-    "created_on": "2021-01-20T22:35:33.683Z",
-    "last_updated": "2021-01-20T22:37:05.713Z",
+    "created_on": "2021-01-25T21:29:41.905Z",
+    "last_updated": "2021-01-25T21:36:51.886Z",
     "user_created": null,
-    "user_last_modified": null
-  }
-},
-{
-  "model": "entity.entity",
-  "pk": 4,
-  "fields": {
-    "created_on": "2021-01-20T22:37:32.104Z",
-    "last_updated": "2021-01-22T01:24:55.312Z",
-    "user_created": null,
-    "user_last_modified": null
-  }
-},
-{
-  "model": "entity.entity",
-  "pk": 5,
-  "fields": {
-    "created_on": "2021-01-21T14:39:14.147Z",
-    "last_updated": "2021-01-21T14:40:00.888Z",
-    "user_created": null,
-    "user_last_modified": null
+    "user_last_modified": null,
+    "pref_label": "Jane Doe"
   }
 },
 {
   "model": "entity.name",
   "pk": 1,
-  "fields": {
-    "label": "Cyert, Richard 1921-1998",
-    "created_on": "2021-01-20T22:36:51.194Z",
-    "last_updated": "2021-01-20T22:36:51.194Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 2,
-  "fields": {
-    "label": "Cyert, R. M. 1921-1998",
-    "created_on": "2021-01-20T22:36:51.194Z",
-    "last_updated": "2021-01-20T22:36:51.194Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 3,
-  "fields": {
-    "label": "Cyert, Richard M. 1921-1998",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 5,
-  "fields": {
-    "label": "Cyert, Richard M.",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 6,
-  "fields": {
-    "label": "Cyert, Richard M. (Richard Michael), 1921-1998",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 8,
-  "fields": {
-    "label": "Cyert, Richard Michael",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 9,
-  "fields": {
-    "label": "사이어트, R.M. 1921-1998",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 10,
-  "fields": {
-    "label": "Cyert, Richard Michael, 1921-",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 12,
-  "fields": {
-    "label": "Richard Cyert American economist",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 13,
-  "fields": {
-    "label": "Cyert, R. M. (Richard Michael), 1921-1998",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 14,
-  "fields": {
-    "label": "Cyert, R. 1921-1998",
-    "created_on": "2021-01-20T22:36:51.195Z",
-    "last_updated": "2021-01-20T22:36:51.195Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 17,
-  "fields": {
-    "label": "Cyert, Richard M. (Richard Michael)",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 18,
-  "fields": {
-    "label": "サイアート, R. M",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 22,
-  "fields": {
-    "label": "씨어트, 리차드 마이클 1921-1998",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 23,
-  "fields": {
-    "label": "사이어트, 리차드 마이클 1921-1998",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 24,
-  "fields": {
-    "label": "Richard Cyert US-amerikanischer Managementforscher",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 25,
-  "fields": {
-    "label": "Richard Cyert Amerikaans econoom (1921-1998)",
-    "created_on": "2021-01-20T22:36:51.196Z",
-    "last_updated": "2021-01-20T22:36:51.196Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 33,
-  "fields": {
-    "label": "Cyert, R. M. (Richard Michael)",
-    "created_on": "2021-01-20T22:36:51.197Z",
-    "last_updated": "2021-01-20T22:36:51.197Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 3,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 34,
   "fields": {
     "label": "Mary Doe",
-    "created_on": "2021-01-20T23:07:15.072Z",
-    "last_updated": "2021-01-20T23:07:15.072Z",
+    "created_on": "2021-01-25T21:29:41.913Z",
+    "last_updated": "2021-01-25T21:36:51.890Z",
     "user_created": null,
     "user_last_modified": null,
-    "name_of": 4,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 35,
-  "fields": {
-    "label": "Mellon, Andrew William, 1855-1937",
-    "created_on": "2021-01-21T14:39:59.925Z",
-    "last_updated": "2021-01-21T14:39:59.925Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 37,
-  "fields": {
-    "label": "安德鲁·W·梅隆",
-    "created_on": "2021-01-21T14:40:00.770Z",
-    "last_updated": "2021-01-21T14:40:00.770Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 39,
-  "fields": {
-    "label": "Mellon, André 1855-1937",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 40,
-  "fields": {
-    "label": "Andrew Mellon imprenditore, banchiere e politico statunitense",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 41,
-  "fields": {
-    "label": "Andrew W. Mellon",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 42,
-  "fields": {
-    "label": "Mellon, Andrew William",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 43,
-  "fields": {
-    "label": "Mellon, Andrew",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 44,
-  "fields": {
-    "label": "Andrew W. Mellon US-amerikanischer Bankier, Philanthrop und Politiker",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 45,
-  "fields": {
-    "label": "Mellon, A. W. 1855-1937",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 47,
-  "fields": {
-    "label": "Mellon, Andrew William 1855-1937",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 49,
-  "fields": {
-    "label": "اندرو دابلیو. ملون",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 51,
-  "fields": {
-    "label": "Ендрју Мелон",
-    "created_on": "2021-01-21T14:40:00.771Z",
-    "last_updated": "2021-01-21T14:40:00.771Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 52,
-  "fields": {
-    "label": "Меллон, Эндрю Уильям",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 53,
-  "fields": {
-    "label": "Mellon, A.W. 1855-1937",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 54,
-  "fields": {
-    "label": "A.W. Mellon",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 55,
-  "fields": {
-    "label": "Эндру Уільям Мелан",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 56,
-  "fields": {
-    "label": "アンドリュー・メロン",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 58,
-  "fields": {
-    "label": "أندرو ويليام ميلون",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 60,
-  "fields": {
-    "label": "Էնդրյու Ուիլյամ Մելոն",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 62,
-  "fields": {
-    "label": "a.w. mellon educational & charitable trust",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 63,
-  "fields": {
-    "label": "Andrew W. Mellon Amerikaans kunstverzamelaar (1855-1937)",
-    "created_on": "2021-01-21T14:40:00.772Z",
-    "last_updated": "2021-01-21T14:40:00.772Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 65,
-  "fields": {
-    "label": "Mellon, Andrew William, 1855-1937.",
-    "created_on": "2021-01-21T14:40:00.773Z",
-    "last_updated": "2021-01-21T14:40:00.773Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 66,
-  "fields": {
-    "label": "Mellon, Andrew 1855-1937",
-    "created_on": "2021-01-21T14:40:00.773Z",
-    "last_updated": "2021-01-21T14:40:00.773Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 67,
-  "fields": {
-    "label": "Andrew William Mellon",
-    "created_on": "2021-01-21T14:40:00.773Z",
-    "last_updated": "2021-01-21T14:40:00.773Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 69,
-  "fields": {
-    "label": "hon. a.w. mellon",
-    "created_on": "2021-01-21T14:40:00.773Z",
-    "last_updated": "2021-01-21T14:40:00.773Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
-    "language": ""
-  }
-},
-{
-  "model": "entity.name",
-  "pk": 70,
-  "fields": {
-    "label": "Ендрю Меллон",
-    "created_on": "2021-01-21T14:40:00.773Z",
-    "last_updated": "2021-01-21T14:40:00.773Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "name_of": 5,
+    "name_of": 3,
+    "authority": null,
     "language": ""
   }
 },
@@ -638,75 +102,36 @@
   "model": "entity.person",
   "pk": 1,
   "fields": {
-    "pref_label": "Herbert Simon",
     "birth_edtf": "",
     "birth_early": null,
     "birth_late": null,
     "death_edtf": "",
     "death_early": null,
-    "death_late": null,
-    "viaf_match": "https://viaf.org/viaf/29540765",
-    "lcnaf_match": null
+    "death_late": null
   }
 },
 {
   "model": "entity.person",
   "pk": 2,
   "fields": {
-    "pref_label": "Andrew Carnegie",
     "birth_edtf": "",
     "birth_early": null,
     "birth_late": null,
     "death_edtf": "",
     "death_early": null,
-    "death_late": null,
-    "viaf_match": null,
-    "lcnaf_match": "https://id.loc.gov/authorities/names/n50032468"
+    "death_late": null
   }
 },
 {
   "model": "entity.person",
   "pk": 3,
   "fields": {
-    "pref_label": "Richard Michael Cyert",
-    "birth_edtf": "1921-07-22",
-    "birth_early": "1921-07-22",
-    "birth_late": "1921-07-22",
-    "death_edtf": "1998-10-07",
-    "death_early": "1998-10-07",
-    "death_late": "1998-10-07",
-    "viaf_match": "http://viaf.org/viaf/7451274",
-    "lcnaf_match": null
-  }
-},
-{
-  "model": "entity.person",
-  "pk": 4,
-  "fields": {
-    "pref_label": "Jane Doe",
     "birth_edtf": "1901",
     "birth_early": null,
     "birth_late": null,
-    "death_edtf": "1972-11",
+    "death_edtf": "1999-12-13",
     "death_early": null,
-    "death_late": null,
-    "viaf_match": null,
-    "lcnaf_match": null
-  }
-},
-{
-  "model": "entity.person",
-  "pk": 5,
-  "fields": {
-    "pref_label": "Andrew W. Mellon",
-    "birth_edtf": "1855-03-24",
-    "birth_early": "1855-03-24",
-    "birth_late": "1855-03-24",
-    "death_edtf": "1937-08-26",
-    "death_early": "1937-08-26",
-    "death_late": "1937-08-26",
-    "viaf_match": "http://viaf.org/viaf/62360327",
-    "lcnaf_match": "http://id.loc.gov/authorities/names/n84033829"
+    "death_late": null
   }
 },
 {
@@ -714,7 +139,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$UI4kXbJciKKR$AgViYPcykeCkANFEUfB9wqg60pMegomKh9NH9isaZps=",
-    "last_login": "2021-01-22T01:24:47.326Z",
+    "last_login": "2021-01-26T19:55:52.521Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

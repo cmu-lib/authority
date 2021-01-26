@@ -10,10 +10,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework_jsonp.renderers import JSONPRenderer
-from authority import serializers
+from authority import serializers, namespaces
+import authority.models
 from entity import documents, models
 import entity.serializers
-import json
+from django.db.models import Prefetch, Subquery, OuterRef
 
 
 class GetSerializerClassMixin(object):
@@ -107,7 +108,7 @@ class ReconciliationEndpoint(APIView):
 
         query = serialized_query["query"]
         es_response = documents.PersonDocument().reconciliation_search(
-            query=query, max_items=self.max_returned_items
+            query=query, max_items=items_slice(query)
         )
         formatted_response = []
         for hit in es_response:
@@ -176,17 +177,20 @@ class ReconciliationEndpoint(APIView):
         ]
 
         rows_payload = {}
-        for e in extension_data["ids"]:
-            person = e.person
-            serialized_e = entity.serializers.PersonSerializer(person)
+        person_ids = [p.id for p in extension_data["ids"]]
+        person_queryset = models.Person.objects.filter(id__in=person_ids)
+        serialized_people = entity.serializers.PersonSerializer(
+            person_queryset, many=True
+        ).data
+        for e in serialized_people:
             entity_payload = {}
-            for k, v in serialized_e.data.items():
+            for k, v in e.items():
                 if k in requested_field_names:
                     if isinstance(v, list):
                         entity_payload[k] = [{"str": val} for val in v]
                     else:
                         entity_payload[k] = [{"str": v}]
-                    rows_payload[e.id] = entity_payload
+            rows_payload[e["id"]] = entity_payload
 
         complete_payload = {"meta": meta_payload, "rows": rows_payload}
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from authority import mixins
+from authority import mixins, namespaces
+from authority.models import CloseMatch, Authority
 from rdflib import Graph, namespace
 from rdflib.term import URIRef
 from edtf import parse_edtf, struct_time_to_date
@@ -12,7 +13,9 @@ Abstract models used across the rest of the application
 
 
 class Entity(mixins.trackedModel):
-    pass
+    pref_label = models.CharField(
+        default="", blank=True, db_index=True, max_length=5000
+    )
 
     class Meta:
         verbose_name_plural = "entities"
@@ -22,14 +25,21 @@ class Name(mixins.labeledModel, mixins.trackedModel):
     name_of = models.ForeignKey(
         "Person", on_delete=models.CASCADE, related_name="alt_labels"
     )
+    authority = models.ForeignKey(
+        "authority.Authority",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text="Authority that uses this name",
+        related_name="names_used",
+    )
     language = models.CharField(default="", blank=True, max_length=50, db_index=True)
 
     class Meta:
-        unique_together = ("label", "name_of")
+        unique_together = ("label", "name_of", "authority")
 
 
 class Person(Entity):
-    pref_label = models.CharField(default="", blank=True, db_index=True, max_length=5000)
     birth_edtf = models.CharField(
         default="",
         blank=True,
@@ -46,23 +56,27 @@ class Person(Entity):
     )
     death_early = models.DateField(null=True, blank=True)
     death_late = models.DateField(null=True, blank=True)
-    viaf_match = models.URLField(
-        unique=True,
-        null=True,
-        blank=True,
-        help_text="VIAF URI for this person",
-        verbose_name="VIAF match",
-    )
-    lcnaf_match = models.URLField(
-        unique=True,
-        null=True,
-        blank=True,
-        help_text="LCNAF URI for this person",
-        verbose_name="LCNAF match",
-    )
 
     class Meta:
         verbose_name_plural = "people"
+
+    @property
+    def viaf_match(self):
+        try:
+            return CloseMatch.objects.get(
+                authority__namespace=namespaces.VIAF, entity=self
+            ).identifier
+        except:
+            return None
+
+    @property
+    def lcnaf_match(self):
+        try:
+            return CloseMatch.objects.get(
+                authority__namespace=namespaces.LOC, entity=self
+            ).identifier
+        except:
+            return None
 
     def process_edtf(self, d):
         ProcessedEDTF = namedtuple("ProcessedEDTF", "string begin end")
@@ -75,17 +89,15 @@ class Person(Entity):
         processed_birth = self.process_edtf(self.birth_edtf)
         self.birth_early = processed_birth.begin
         self.birth_late = processed_birth.end
-        self.save()
 
     def process_death_edtf(self):
         processed_death = self.process_edtf(self.death_edtf)
         self.death_early = processed_death.begin
         self.death_late = processed_death.end
-        self.save()
 
-    def populate_from_lcnaf_graph(self, lcnaf_graph):
+    def populate_from_lcnaf_graph(self, lcnaf_graph, update_viaf=False):
         """
-        Given an RDF graph of LCNAF data, populate
+        Given an RDF graph of LCNAF data, populate birth/death dates
         """
         core_data = [
             (str(s), o.value)
@@ -108,27 +120,31 @@ class Person(Entity):
         viaf_concept = [
             str(o)
             for s, p, o in lcnaf_graph.triples((None, namespace.SKOS.exactMatch, None))
-            if "http://viaf.org/viaf/" in str(o)
+            if namespaces.VIAF in str(o)
         ]
         if len(viaf_concept) > 0:
             viaf_graph = Graph().parse(viaf_concept[0])
             viaf_uris = [
-                str(s)
+                str(o)
                 for s, p, o in viaf_graph.triples(
-                    (None, URIRef("http://schema.org/name"), None)
+                    (None, URIRef(f"{namespace.FOAF}focus"), None)
                 )
             ]
-            if len(viaf_uris) > 0:
-                self.viaf_match = viaf_uris[0]
+            if len(viaf_uris) > 0 and update_viaf:
+                CloseMatch.objects.get_or_create(
+                    entity=self,
+                    authority=Authority.objects.get(namespace=namespaces.VIAF),
+                    identifier=viaf_uris[0],
+                )
                 self.populate_from_viaf_graph(viaf_graph)
 
         self.save()
 
-    def populate_from_lcnaf_uri(self):
+    def populate_from_lcnaf_uri(self, update_viaf=False):
         if self.lcnaf_match is None:
             return
         g = Graph().parse(f"{self.lcnaf_match}.skos.xml", format="xml")
-        self.populate_from_lcnaf_graph(lcnaf_graph=g)
+        self.populate_from_lcnaf_graph(lcnaf_graph=g, update_viaf=update_viaf)
 
     def populate_from_viaf_graph(self, viaf_graph):
 

@@ -16,6 +16,13 @@ class AuthorityAdmin(admin.ModelAdmin):
 admin.site.register(authority.models.Authority, AuthorityAdmin)
 
 
+class CloseMatchAdmin(admin.ModelAdmin):
+    model = authority.models.CloseMatch
+
+
+admin.site.register(authority.models.CloseMatch, CloseMatchAdmin)
+
+
 class NameInline(admin.TabularInline):
     model = entity.models.Name
     extra = 1

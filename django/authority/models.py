@@ -1,6 +1,5 @@
 from django.db import models
 from authority import mixins
-from entity.models import Person
 
 
 class Authority(mixins.trackedModel, mixins.uniqueLabledModel, mixins.descriptionModel):
@@ -13,12 +12,12 @@ class Authority(mixins.trackedModel, mixins.uniqueLabledModel, mixins.descriptio
 
 class CloseMatch(mixins.trackedModel):
     entity = models.ForeignKey(
-        Person, on_delete=models.CASCADE, related_name="close_matches"
+        "entity.Person", on_delete=models.CASCADE, related_name="close_matches"
     )
     authority = models.ForeignKey(
         Authority, on_delete=models.CASCADE, related_name="close_matches"
     )
-    identifier = models.CharField(max_length=1000)
+    identifier = models.URLField(help_text="URI for this entity in this authority.")
 
     class Meta:
         unique_together = (("entity", "authority"), ("authority", "identifier"))
