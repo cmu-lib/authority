@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand
 from rdflib import Graph, namespace
 from tqdm import tqdm
-from entity import models
+import entity.models
+import authority.models
 from django.db import transaction
 
 
 def load_rdf_file(xmlfile, n_lines=None):
+    entity.models.Person.objects.delete()
     with open(xmlfile, "r") as handle:
         for line in tqdm(handle, total=n_lines):
             try:
@@ -22,7 +24,10 @@ def load_rdf_entity(entity_text):
     lcnaf_uri = [
         str(s) for s, p, o in g.triples((None, namespace.SKOS.prefLabel, None))
     ][0]
-    person = models.Person.objects.get_or_create(lcnaf_match=lcnaf_uri)[0]
+    person = models.Person.objects.create()
+    authority.models.CloseMatch.objects.create(
+        authority_id=2, entity=person, identifier=lcnaf_uri
+    )
     person.populate_from_lcnaf_graph(g)
 
 

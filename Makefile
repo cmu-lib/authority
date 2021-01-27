@@ -32,10 +32,13 @@ wipe: blank
 migrate: wipe
 	docker-compose exec django python manage.py migrate
 	$(MAKE) restoreusers
+	$(MAKE) restoreauthorities
 dumpusers:
 	docker-compose exec django python manage.py dumpdata --indent 2 auth authtoken -e auth.permission -o /vol/data/bkp/users.json
 restoreusers:
 	docker-compose exec django python manage.py loaddata /vol/data/bkp/users.json
+restoreauthorities:
+	docker-compose exec django python manage.py loaddata authority/fixtures/authority.json
 backup:
 	docker-compose exec postgres pg_dump -U admin -d authority > data/bkp/bk.sql
 restore: wipe

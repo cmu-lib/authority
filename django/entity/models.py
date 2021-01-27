@@ -34,9 +34,14 @@ class Name(mixins.labeledModel, mixins.trackedModel):
         related_name="names_used",
     )
     language = models.CharField(default="", blank=True, max_length=50, db_index=True)
+    preferred = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text="Is this name considered 'preferred' by the authority using it?",
+    )
 
     class Meta:
-        unique_together = ("label", "name_of", "authority")
+        unique_together = ("label", "name_of", "language", "preferred", "authority")
 
 
 class Person(Entity):
@@ -147,36 +152,102 @@ class Person(Entity):
         self.populate_from_lcnaf_graph(lcnaf_graph=g, update_viaf=update_viaf)
 
     def populate_from_viaf_graph(self, viaf_graph):
-
+        viaf_uri = self.viaf_match
+        # Collect other authority labels
         pref_labels = [
-            o for s, p, o in viaf_graph.triples((None, namespace.SKOS.prefLabel, None))
+            {"label": o.value, "language": o.language, "subject": s}
+            for s, p, o in viaf_graph.triples((None, namespace.SKOS.prefLabel, None))
+            if str(s) != viaf_uri
         ]
-        en_pref_labels = [
-            o.value
-            for o in pref_labels
-            if o.language is not None and "en" in o.language
-        ]
-        if len(en_pref_labels) > 0:
-            self.pref_label = en_pref_labels[0]
-        else:
-            self.pref_label = pref_labels[0].value
+        prefNames = []
+        for l in pref_labels:
+            # Get source schema
+            source_schemae = [
+                o
+                for s, p, o in viaf_graph.triples(
+                    (l["subject"], namespace.SKOS.inScheme, None)
+                )
+            ]
+            # If there is no source schema, skip to the next name
+            if len(source_schemae) == 0:
+                continue
+            else:
+                source_schema = source_schemae[0].__str__()
+            authority = Authority.objects.get_or_create(
+                viaf_namespace=source_schema,
+                defaults={
+                    "label": source_schema,
+                    "namespace": source_schema,
+                },
+            )[0]
+            norm_language = l["language"] if l["language"] is not None else ""
+            prefNames.append(
+                Name(
+                    name_of=self,
+                    label=l["label"],
+                    language=norm_language,
+                    authority=authority,
+                    preferred=True,
+                )
+            )
+        Name.objects.bulk_create(prefNames, ignore_conflicts=True)
 
-        altLabels = []
-        for s, p, o in viaf_graph.triples((None, namespace.SKOS.altLabel, None)):
-            lang = o.language
-            if lang is None:
-                lang = ""
-            altLabels.append({"value": o.value, "lang": lang})
-        alt_labels = [
-            Name(name_of=self, label=l["value"], language=l["lang"]) for l in altLabels
+        # Assign person pref_label from VIAF's preferred labels, privilegeing english first if possible
+        viaf_preferred_labels = [
+            {"label": o.value, "language": o.language}
+            for s, p, o in viaf_graph.triples(
+                (URIRef(viaf_uri), namespace.SKOS.prefLabel, None)
+            )
         ]
-        Name.objects.bulk_create(alt_labels, ignore_conflicts=True)
+        viaf_en_label = [l for l in viaf_preferred_labels if l["language"] == "en-US"]
+        if len(viaf_en_label) > 0:
+            self.pref_label = viaf_en_label[0]["label"]
+        elif len(viaf_preferred_labels) > 0:
+            self.pref_label = viaf_preferred_labels[0]["label"]
+        else:
+            self.pref_label = pref_labels[0]["label"]
+
+        # Collect other authority labels
+        alt_labels = [
+            {"label": o.value, "language": o.language, "subject": s}
+            for s, p, o in viaf_graph.triples((None, namespace.SKOS.altLabel, None))
+            if s is not URIRef(viaf_uri)
+        ]
+        altNames = []
+        for l in alt_labels:
+            # Get source schema
+            source_schemae = [
+                o
+                for s, p, o in viaf_graph.triples(
+                    (l["subject"], namespace.SKOS.inScheme, None)
+                )
+            ]
+            # If there is no source schema, skip to the next name
+            if len(source_schemae) == 0:
+                continue
+            else:
+                source_schema = source_schemae[0].__str__()
+            authority = Authority.objects.get_or_create(
+                viaf_namespace=source_schema,
+                defaults={"label": source_schema, "namespace": source_schema},
+            )[0]
+            norm_language = l["language"] if l["language"] is not None else ""
+            altNames.append(
+                Name(
+                    name_of=self,
+                    label=l["label"],
+                    language=norm_language,
+                    authority=authority,
+                    preferred=False,
+                )
+            )
+        Name.objects.bulk_create(altNames, ignore_conflicts=True)
 
         # Get birthdates
         birth_literals = {
             o.value
             for s, p, o in viaf_graph.triples(
-                (None, URIRef("http://schema.org/birthDate"), None)
+                (URIRef(viaf_uri), URIRef("http://schema.org/birthDate"), None)
             )
         }
         birth_start = None
@@ -193,7 +264,7 @@ class Person(Entity):
         death_literals = birth_literals = {
             o.value
             for s, p, o in viaf_graph.triples(
-                (None, URIRef("http://schema.org/deathDate"), None)
+                (URIRef(viaf_uri), URIRef("http://schema.org/deathDate"), None)
             )
         }
         death_start = None

@@ -4,6 +4,9 @@ from authority import mixins
 
 class Authority(mixins.trackedModel, mixins.uniqueLabledModel, mixins.descriptionModel):
     namespace = models.URLField(unique=True)
+    viaf_namespace = models.URLField(
+        null=True, unique=True, help_text="The authority schema space used by VIAF"
+    )
 
     class Meta:
         abstract = False

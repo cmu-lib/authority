@@ -19,14 +19,13 @@ class EDTFTest(TestCase):
 
 
 class PersonVIAFImportTest(TestCase):
+    fixtures = ["authority.json"]
+
     def test_load_viaf(self):
         simon = models.Person.objects.create()
-        viaf = authority.models.Authority.objects.create(
-            label="lcnaf", namespace=namespaces.VIAF
-        )
         authority.models.CloseMatch.objects.create(
             entity=simon,
-            authority=viaf,
+            authority_id=1,
             identifier=f"{namespaces.VIAF}29540765",
         )
         self.assertEqual(simon.death_edtf, "")
@@ -47,6 +46,8 @@ class PersonVIAFImportTest(TestCase):
 
 
 class PersonLCNAFImportTest(TestCase):
+    fixtures = ["authority.json"]
+
     def test_load_viaf(self):
         simon = models.Person.objects.create()
         viaf = authority.models.Authority.objects.create(

@@ -1,0 +1,30 @@
+[
+  {
+    "model": "authority.authority",
+    "pk": 1,
+    "fields": {
+      "label": "Virtual Internet Authority File (VIAF)",
+      "description": "",
+      "created_on": "2021-01-25T21:26:11.015Z",
+      "last_updated": "2021-01-25T21:26:11.015Z",
+      "user_created": null,
+      "user_last_modified": null,
+      "namespace": "http://viaf.org/viaf/",
+      "viaf_namespace": "http://viaf.org/viaf/"
+    }
+  },
+  {
+    "model": "authority.authority",
+    "pk": 2,
+    "fields": {
+      "label": "LC Name Authority File (LCNAF)",
+      "description": "",
+      "created_on": "2021-01-25T21:26:01.811Z",
+      "last_updated": "2021-01-25T21:26:01.812Z",
+      "user_created": null,
+      "user_last_modified": null,
+      "namespace": "http://id.loc.gov/authorities/names/",
+      "viaf_namespace": "http://viaf.org/authorityScheme/LC"
+    }
+  }
+]
