@@ -31,8 +31,8 @@ services:
     image: elasticsearch:7.10.1
     restart: always
     volumes:
-      - ./data/es:/usr/share/elasticsearch/data
-      - ./data/logs:/usr/share/elasticsearch/logs
+      - ./data/es:/usr/share/elasticsearch/data:z
+      - ./data/logs:/usr/share/elasticsearch/logs:z
     expose:
       - 9200
     env_file: .env
