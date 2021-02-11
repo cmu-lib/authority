@@ -17,13 +17,34 @@ class Entity(mixins.trackedModel):
         default="", blank=True, db_index=True, max_length=5000
     )
 
+    @property
+    def viaf_match(self):
+        try:
+            return CloseMatch.objects.get(
+                authority__namespace=namespaces.VIAF, entity=self
+            ).identifier
+        except:
+            return None
+
+    @property
+    def lcnaf_match(self):
+        try:
+            return CloseMatch.objects.get(
+                authority__namespace=namespaces.LOC, entity=self
+            ).identifier
+        except:
+            return None
+
+    def __str__(self):
+        return self.pref_label
+
     class Meta:
         verbose_name_plural = "entities"
 
 
 class Name(mixins.labeledModel, mixins.trackedModel):
     name_of = models.ForeignKey(
-        "Person", on_delete=models.CASCADE, related_name="alt_labels"
+        "Entity", on_delete=models.CASCADE, related_name="alt_labels"
     )
     authority = models.ForeignKey(
         "authority.Authority",
@@ -64,24 +85,6 @@ class Person(Entity):
 
     class Meta:
         verbose_name_plural = "people"
-
-    @property
-    def viaf_match(self):
-        try:
-            return CloseMatch.objects.get(
-                authority__namespace=namespaces.VIAF, entity=self
-            ).identifier
-        except:
-            return None
-
-    @property
-    def lcnaf_match(self):
-        try:
-            return CloseMatch.objects.get(
-                authority__namespace=namespaces.LOC, entity=self
-            ).identifier
-        except:
-            return None
 
     def process_edtf(self, d):
         ProcessedEDTF = namedtuple("ProcessedEDTF", "string begin end")
@@ -145,7 +148,7 @@ class Person(Entity):
 
         self.save()
 
-    def populate_from_lcnaf_uri(self, update_viaf=False):
+    def populate_from_lcnaf_uri(self, update_viaf=True):
         if self.lcnaf_match is None:
             return
         g = Graph().parse(f"{self.lcnaf_match}.skos.xml", format="xml")
@@ -285,8 +288,10 @@ class Person(Entity):
         g = Graph().parse(f"{self.viaf_match}/rdf.xml", format="xml")
         self.populate_from_viaf_graph(viaf_graph=g)
 
-    def __str__(self):
-        return self.pref_label
+
+class CorporateBody(Entity):
+    class Meta:
+        verbose_name_plural = "corporate bodies"
 
 
 class Concept(Entity):

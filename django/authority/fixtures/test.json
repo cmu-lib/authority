@@ -3,60 +3,62 @@
   "model": "authority.authority",
   "pk": 1,
   "fields": {
-    "label": "LC Name Authority File (LCNAF)",
-    "description": "",
-    "created_on": "2021-01-25T21:26:01.811Z",
-    "last_updated": "2021-01-25T21:26:01.812Z",
-    "user_created": null,
-    "user_last_modified": null,
-    "namespace": "http://id.loc.gov/authorities/names/"
-  }
-},
-{
-  "model": "authority.authority",
-  "pk": 2,
-  "fields": {
     "label": "Virtual Internet Authority File (VIAF)",
     "description": "",
     "created_on": "2021-01-25T21:26:11.015Z",
     "last_updated": "2021-01-25T21:26:11.015Z",
     "user_created": null,
     "user_last_modified": null,
-    "namespace": "http://viaf.org/viaf/"
+    "namespace": "http://viaf.org/viaf/",
+    "viaf_namespace": "http://viaf.org/viaf/"
+  }
+},
+{
+  "model": "authority.authority",
+  "pk": 2,
+  "fields": {
+    "label": "LC Name Authority File (LCNAF)",
+    "description": "",
+    "created_on": "2021-01-25T21:26:01.811Z",
+    "last_updated": "2021-01-25T21:26:01.812Z",
+    "user_created": null,
+    "user_last_modified": null,
+    "namespace": "http://id.loc.gov/authorities/names/",
+    "viaf_namespace": "http://viaf.org/authorityScheme/LC"
   }
 },
 {
   "model": "authority.closematch",
   "pk": 1,
   "fields": {
-    "created_on": "2021-01-25T21:29:03.864Z",
-    "last_updated": "2021-01-25T21:29:03.864Z",
+    "created_on": "2021-01-27T18:57:13.697Z",
+    "last_updated": "2021-01-27T18:57:13.697Z",
     "user_created": null,
     "user_last_modified": null,
     "entity": 1,
     "authority": 1,
-    "identifier": "http://id.loc.gov/authorities/names/n50032468"
+    "identifier": "http://viaf.org/viaf/94625754"
   }
 },
 {
   "model": "authority.closematch",
   "pk": 2,
   "fields": {
-    "created_on": "2021-01-25T21:29:22.121Z",
-    "last_updated": "2021-01-25T21:29:22.121Z",
+    "created_on": "2021-01-27T18:57:42.920Z",
+    "last_updated": "2021-01-27T18:57:42.920Z",
     "user_created": null,
     "user_last_modified": null,
     "entity": 2,
     "authority": 2,
-    "identifier": "http://viaf.org/viaf/62360327"
+    "identifier": "https://id.loc.gov/authorities/names/n84033829"
   }
 },
 {
   "model": "entity.entity",
   "pk": 1,
   "fields": {
-    "created_on": "2021-01-25T21:29:03.840Z",
-    "last_updated": "2021-01-25T21:29:07.215Z",
+    "created_on": "2021-01-27T18:57:13.656Z",
+    "last_updated": "2021-01-27T18:57:13.657Z",
     "user_created": null,
     "user_last_modified": null,
     "pref_label": "Andrew Carnegie"
@@ -66,8 +68,8 @@
   "model": "entity.entity",
   "pk": 2,
   "fields": {
-    "created_on": "2021-01-25T21:29:22.116Z",
-    "last_updated": "2021-01-25T21:29:22.116Z",
+    "created_on": "2021-01-27T18:57:42.913Z",
+    "last_updated": "2021-01-27T18:57:42.913Z",
     "user_created": null,
     "user_last_modified": null,
     "pref_label": "Andrew Mellon"
@@ -77,8 +79,8 @@
   "model": "entity.entity",
   "pk": 3,
   "fields": {
-    "created_on": "2021-01-25T21:29:41.905Z",
-    "last_updated": "2021-01-25T21:36:51.886Z",
+    "created_on": "2021-01-27T18:57:52.766Z",
+    "last_updated": "2021-01-27T18:57:52.766Z",
     "user_created": null,
     "user_last_modified": null,
     "pref_label": "Jane Doe"
@@ -89,13 +91,14 @@
   "pk": 1,
   "fields": {
     "label": "Mary Doe",
-    "created_on": "2021-01-25T21:29:41.913Z",
-    "last_updated": "2021-01-25T21:36:51.890Z",
+    "created_on": "2021-01-27T18:57:52.777Z",
+    "last_updated": "2021-01-27T18:57:52.778Z",
     "user_created": null,
     "user_last_modified": null,
     "name_of": 3,
     "authority": null,
-    "language": ""
+    "language": "en-US",
+    "preferred": false
   }
 },
 {
@@ -126,10 +129,10 @@
   "model": "entity.person",
   "pk": 3,
   "fields": {
-    "birth_edtf": "1901",
+    "birth_edtf": "",
     "birth_early": null,
     "birth_late": null,
-    "death_edtf": "1999-12-13",
+    "death_edtf": "",
     "death_early": null,
     "death_late": null
   }
@@ -139,7 +142,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$UI4kXbJciKKR$AgViYPcykeCkANFEUfB9wqg60pMegomKh9NH9isaZps=",
-    "last_login": "2021-01-26T19:55:52.521Z",
+    "last_login": "2021-01-27T18:55:19.479Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

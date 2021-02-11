@@ -18,6 +18,7 @@ def load_rdf_file(xmlfile, wipe=True, n_lines=None):
                 split_line = line.split("\t")
                 load_rdf_entity(split_line[0], split_line[1], wipe=wipe)
             except Exception as e:
+                print(line)
                 print(e)
                 continue
 
