@@ -32,6 +32,7 @@ services:
     restart: always
     volumes:
       - ./data/es:/usr/share/elasticsearch/data
+      - ./data/logs:/usr/share/elasticsearch/logs
     expose:
       - 9200
     env_file: .env
